@@ -1,11 +1,9 @@
 package org.launchcode.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 /**
  * Created by LaunchCode
@@ -28,14 +26,17 @@ public class Cheese {
     @ManyToOne
     private Category category;
 
+    @ManyToMany(mappedBy = "cheeses")
+    private List<Menu> menusList;
+
     public Cheese(String name, String description) {
         this();
         this.name = name;
         this.description = description;
-
     }
 
-    public Cheese() { }
+    public Cheese(){
+    }
 
     public int getId() { return id; }
 
