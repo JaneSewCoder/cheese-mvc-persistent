@@ -12,6 +12,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.validation.Valid;
 
@@ -34,7 +38,7 @@ public class MenuController {
 
     @RequestMapping(value = "add", method = RequestMethod.GET)
     public String displayAddMenuForm(Model model) {
-        model.addAttribute("title", "My Cheeses : Add Menu");
+        model.addAttribute("title", "My Cheeses: Add Menu");
         model.addAttribute(new Menu());
 
         return "menu/add";
@@ -57,17 +61,24 @@ public class MenuController {
     public String viewMenuForm(Model model, @PathVariable int menuId) {
         Menu menu = menuDao.findOne(menuId);
         model.addAttribute(menu);
-        model.addAttribute("title", "My Cheeses: ");
+        model.addAttribute("title", "My Cheeses: " + menu.getName());
+
+        //model.addAttribute("title", menu.getName());
+        model.addAttribute("cheeses", menu.getCheeses());
+        model.addAttribute("menuId", menu.getId());
+
         return "menu/view";
     }
 
     @RequestMapping(value = "add-item/{menuId}", method = RequestMethod.GET)
     public String addItemForm(Model model, @PathVariable int menuId) {
         Menu menu = menuDao.findOne(menuId);
-        AddMenuItemForm menuItemForm = new AddMenuItemForm(menu, cheeseDao.findAll());
+        AddMenuItemForm form = new AddMenuItemForm(menu, cheeseDao.findAll());
 
-        model.addAttribute("form", menuItemForm);
-        model.addAttribute("title", "Add item to menu: ");
+        model.addAttribute("form", form);
+        model.addAttribute("title", "Add item to menu: " + menu.getName());
+
+        model.addAttribute("form", form);
 
         return "menu/add-item";
     }
@@ -77,7 +88,7 @@ public class MenuController {
 
         if (errors.hasErrors()) {
             model.addAttribute("form", form);
-            model.addAttribute("title", "Add item to menu: ");
+            // model.addAttribute("title", "Add item to menu: " + themenu.getName());
             return "menu/add-item";
         }
 
@@ -89,6 +100,7 @@ public class MenuController {
         menuDao.save(menu);
 
         return "redirect:/menu/view/" + menu.getId();
+        //return "menu/add-item";
     }
 }
 

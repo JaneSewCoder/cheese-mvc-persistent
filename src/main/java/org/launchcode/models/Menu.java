@@ -21,6 +21,10 @@ public class Menu {
     @ManyToMany
     private List<Cheese> cheeses;
 
+    public void addItem(Cheese item){
+        this.cheeses.add(item);
+    }
+
     public Menu(){
     }
 
@@ -44,9 +48,7 @@ public class Menu {
         return cheeses;
     }
 
-    public void addItem(Cheese item){
-        this.cheeses.add(item);
-    }
+
 
 
 
